@@ -6,6 +6,7 @@
 
 * Windows 10
 * Windows Server 2019
+* Windows 7
 
 ## x86
 
