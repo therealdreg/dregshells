@@ -76,3 +76,4 @@ port_converted=$(printf '%04X\n' "$(( ( ~ 0x${out} ) & 0xFFFF ))")
 echo "port converted: ${port_converted}"
 check_invalid_chars ${port_converted}
 
+
