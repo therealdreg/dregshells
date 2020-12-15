@@ -7,22 +7,14 @@ import subprocess
 import sys
 
 
-def CheckBadChar(entry):
-    for x in entry:
-#        print(x)
-        if x == "0A" or x == "0a" or x == "0d" or x == "0D" or x == "00":
-            print("bad char found!")
-            sys.exit()
-
-def adri(port):
-    x = port # hex number
+# Encodes an hexadecimal number as the substraction of two numbers without the characters 00 0a 0d
+def adri(num,  num_bits=32):
+    x = num # hex number
     x = x.lower()
     y = ""
     z = ""
     acarreo = False
-    
-    num_bits=32 #32 or 64 bits
-    
+
     steps=int(num_bits/4)
     
     for i in range(steps,0,-2):
@@ -66,54 +58,55 @@ def adri(port):
                 z = "01"+z
     
     line=y + " - "+z+ " = "+x
+    print(line)
     return line
-    #print(line)
-    #y_num=int(y,16)
-    #z_num=int(z,16)
+
+
+#######################################TEST CODE###############################3
+
+
+#Returns True if badChar is found
+def CheckBadChar(entry):
+    for x in entry:
+        if x.lower() == "0a" or x.lower() == "0d" or x.lower() == "00":
+            return True
+    return False
+
+
+#Test to check against all possible inputs
+def tester():
+    cur_port = None
+    endct = int("0xFFFFFFFF", 16) + 1
+    startc = 0
+    for x in xrange(startc, endct):
+        cur_port = hex(x)[2:].zfill(8)
+        if True:
+            res = adri(cur_port)
+            if x % 100000 == 0:
+                print(res)
+                
+            first = res.split("-")[0].strip()
+            second = res.split("-")[1]
+            res = second.split("=")[1]
+            second = second.split("=")[0].strip()
+            split1 = [first[i:i+2] for i in range(0, len(first), 2)]
+            split2 = [second[i:i+2] for i in range(0, len(second), 2)]
+
     
-    #print("Resultado:"+ hex(y_num-z_num))
-
-#print(adri("fefea020"))
-cur_port = None
-endct = int("0xFFFFFFFF", 16) + 1
-startc = 0
-for x in xrange(startc, endct):
-    cur_port = hex(x)[2:].zfill(8)
-#    print(cur_port)
-    if True:
-        res = adri(cur_port)
-#        print(res)
-        if x % 100000 == 0:
-            print(res)
-        first = res.split("-")[0].strip()
-        second = res.split("-")[1]
-        res = second.split("=")[1]
-        second = second.split("=")[0].strip()
-        split1 = [first[i:i+2] for i in range(0, len(first), 2)]
-        split2 = [second[i:i+2] for i in range(0, len(second), 2)]
-
-#        split1[1] = "0A"
-#        split1[2] = "00"
-#        print(split1)
-        CheckBadChar(split1)
-     #   print("OK not bad chars first op")
-        CheckBadChar(split2)
-     #   print("OK not bad chars second op")
+            if CheckBadChar(split1) or CheckBadChar(split2):
+                print("Test not passed: Bad Char found in addition for "+res)
+                sys.exit(1)
 
 
-#        print(first, split1)
-#        print(second, split2)
-        first = int(first, 16)
-        second = int(second, 16)
+            first = int(first, 16)
+            second = int(second, 16)
+            ops = (first - second) & 0xffffffff
 
-        ops = (first - second) & 0xffffffff
-     #   print(ops)
-        if ops == x and int(res, 16) == x:
- #           print("OK")
-             pass
-        else:
-            print("fail!!" )
-            sys.exit()
+            if not (ops == x and int(res, 16) == x):
+                print("Test not passed: Addition is not correct  for "+ res)
+                sys.exit(1)
 
 
-print("finish, last check was: " + adri(cur_port))
+if __name__ == "__main__":
+    adri("ffffffff")
+    print("All tests passed")
