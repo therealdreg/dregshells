@@ -7,55 +7,38 @@ import subprocess
 import sys
 
 
-# Encodes an hexadecimal number as the substraction of two numbers without the characters 00 0a 0d
+# Encodes an hexadecimal number passed as a string into the subtraction of two numbers without the characters 00 0a 0d. 
+# Ex: adri("000000ff") 
+# Output: 01010201 - 01010102 = 000000ff
 def adri(num,  num_bits=32):
     x = num # hex number
     x = x.lower()
     y = ""
     z = ""
-    acarreo = False
+    carry = False
 
     steps=int(num_bits/4)
     
     for i in range(steps,0,-2):
         byte=x[i-2:i]
-    
-        #check acarreo flag
-        if acarreo:
-            if byte == "ff":
-                acarreo = True
-                num=int(byte,16)
-                byte=format(num+1, 'x').rjust(2,'0')[-2:] #add acarreo +1 
-            else:
-                acarreo = False
-                num=int(byte,16)
-                byte=format(num+1, 'x').rjust(2,'0')[-2:] #add acarreo +1 
-        if byte == "00":
-            y = "05"+y
-            z = "05"+z
-        elif byte == "0a":
-            y = "13"+y
-            z = "09"+z
-        elif byte == "0d":
-            y = "10"+y
-            z = "03"+z
-        elif byte == "ff":
-            #we add two in total: ff+02 =01 01
-            y = "01"+y 
+
+        #check carry flag
+        if carry:
+            carry = byte == "ff"
+            num=int(byte,16)
+            byte=format(num+1, 'x').rjust(2,'0')[-2:] #if carry comes from the previous iteration -> add 1 to current byte
+
+        if byte == "ff": #byte is ff -> set carry for next iteration before computation
+            carry= True
+
+        if byte not in ['09','0c','ff']: 
+            num = int(byte,16)
+            y=format(num+1, 'x').rjust(2,'0')+y
+            z = "01"+z
+        else: #predecesor of blacklisted values-> instead of add 1, add 2
+            num = int(byte,16)
+            y=format(num+2, 'x').rjust(2,'0')[-2:]+y
             z = "02"+z
-            acarreo =True
-        #caso los que se acercan 
-        else:
-            if byte in ['09','0c']:
-                #add one in hexadecimal
-                num = int(byte,16)
-                y=format(num+2, 'x').rjust(2,'0')+y
-                z = "02"+z
-            else:
-                #add one in hexadecimal
-                num = int(byte,16)
-                y=format(num+1, 'x').rjust(2,'0')+y
-                z = "01"+z
     
     line=y + " - "+z+ " = "+x
     print(line)
@@ -84,7 +67,7 @@ def tester():
             res = adri(cur_port)
             if x % 100000 == 0:
                 print(res)
-                
+
             first = res.split("-")[0].strip()
             second = res.split("-")[1]
             res = second.split("=")[1]
@@ -105,8 +88,7 @@ def tester():
             if not (ops == x and int(res, 16) == x):
                 print("Test not passed: Addition is not correct  for "+ res)
                 sys.exit(1)
-
+    print("All tests passed")
 
 if __name__ == "__main__":
-    adri("ffffffff")
-    print("All tests passed")
+    tester()
