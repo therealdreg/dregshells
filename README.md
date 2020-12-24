@@ -1,4 +1,5 @@
 # myshellcodes
+**WARNING**: the ugliest code in the world
 
 # Tested
 
