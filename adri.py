@@ -7,7 +7,7 @@ import subprocess
 import sys
 
 
-# Encodes an hexadecimal number passed as a string into the subtraction of two numbers without the characters 00 0a 0d. 
+# Encodes an hexadecimal number passed as a string into the subtraction of two numbers without the characters 00 0a 0d ff. 
 # Ex: adri("000000ff") 
 # Output: 01010201 - 01010102 = 000000ff
 def adri(num,  num_bits=32):
@@ -22,23 +22,27 @@ def adri(num,  num_bits=32):
     for i in range(steps,0,-2):
         byte=x[i-2:i]
 
-        #check carry flag
+        #check carry flag, add one for the next iteration
         if carry:
             carry = byte == "ff"
             num=int(byte,16)
             byte=format(num+1, 'x').rjust(2,'0')[-2:] #if carry comes from the previous iteration -> add 1 to current byte
 
-        if byte == "ff": #byte is ff -> set carry for next iteration before computation
+        if byte in ['ff', 'fe']: #byte is ff -> set carry for next iteration before computation, also for 'fe' because we will add 3 more
             carry= True
 
-        if byte not in ['09','0c','ff']: 
-            num = int(byte,16)
-            y=format(num+1, 'x').rjust(2,'0')+y
-            z = "01"+z
-        else: #predecesor of blacklisted values-> instead of add 1, add 2
+        if byte in ['09','0c','ff']: 
             num = int(byte,16)
             y=format(num+2, 'x').rjust(2,'0')[-2:]+y
             z = "02"+z
+        elif byte in ['fe']:
+            num = int(byte,16)
+            y=format(num+3, 'x').rjust(2,'0')[-2:]+y
+            z = "03"+z
+        else: #predecesor of blacklisted values-> instead of add 1, add 2
+            num = int(byte,16)
+            y=format(num+1, 'x').rjust(2,'0')[-2:]+y
+            z = "01"+z
     
     line=y + " - "+z+ " = "+x
     print(line)
@@ -51,7 +55,7 @@ def adri(num,  num_bits=32):
 #Returns True if badChar is found
 def CheckBadChar(entry):
     for x in entry:
-        if x.lower() == "0a" or x.lower() == "0d" or x.lower() == "00":
+        if x.lower() == "0a" or x.lower() == "0d" or x.lower() == "00" or x.lower() == "ff":
             return True
     return False
 
