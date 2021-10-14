@@ -38,8 +38,8 @@ port converted: A3EE
 You will be geting the "IP converted" and the "port converted" output and and you will have to put it with a 0x each of the outputs in the following lines of the shellcode.
 
 ```assembly
-push dword 0x77D23CCC ; line 223 
-push word 0xA3EE ; line 225
+push dword 0x77D23CCC ; line 238
+push word 0xA3EE ; line 240
 ```
 And making the changes, this is how the two lines "with my output" would look like.
 ```assembly
@@ -110,13 +110,13 @@ port converted: A3EE
 You will be geting the "IP converted" and the "port converted" output and and you will have to put it with a 0x each of the outputs in the following lines of the shellcode.
 
 ```assembly
-push dword 0x77D23CCC ; line 244
-push word 0xA3EE ; line 248
+push dword 0x77D23CCC ; line 260
+push word 0xA3EE ; line 264
 ```
 And making the changes, this is how the two lines "with my output" would look like.
 ```assembly
-push dword 0xFEFFFF80 ; line 244
-push word 0xA3EE ; line 248
+push dword 0xFEFFFF80 ; line 260
+push word 0xA3EE ; line 264
 ```
 The next thing we will do is compile the assembler file to an object file with the following command:
 ```bash
