@@ -1,5 +1,15 @@
 # Dreg Shells Guide
 
+**WARNING**: the ugliest code in the world
+
+# Compile from Linux or WSL
+
+```
+sudo apt-get install nasm
+./compile.sh
+./compile64.sh
+```
+
 ## Dependecies
 
 ```bash
@@ -153,3 +163,17 @@ Then we will compile to an exe file with the following command and our reverse s
 ```bash
 x86_64-w64-mingw32-gcc -fno-stack-protector -o test.exe test.c
 ```
+
+# Tested
+
+## x86_64
+
+* Windows 10
+* Windows Server 2019
+* Windows 7
+
+## x86
+
+* Windows 10 
+* Windows XP 
+
