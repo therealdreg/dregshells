@@ -21,8 +21,8 @@
 # IN THE SOFTWARE.
 
 
-IP="51.195.45.136"
-PORT="4444"
+IP="127.0.0.1" # change
+PORT="4444" # change
 
 # Test NULL:
 # IP="127.0.255.1"

