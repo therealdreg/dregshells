@@ -1,3 +1,5 @@
+Please, consider make a donation: https://github.com/sponsors/therealdreg
+
 # Dreg Shells Guide
 
 **WARNING**: the ugliest code in the world
